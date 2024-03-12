@@ -1,0 +1,39 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>
+      <div class="md-toolbar-tools">
+        <h1>Pizza</h1>
+      </div>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="container">
+      <mat-card>
+          <div class="grid pt-4">
+            <div class="col-12 md:col-6 lg:col-3" [style]="{'padding': '3vh'}">
+              <mat-form-field appearance="fill" class="form-element">
+                <mat-label>Name</mat-label>
+                <input id="name" matInput placeholder="Name" [(ngModel)]="name">
+                <mat-hint>Hint</mat-hint>
+              </mat-form-field>
+            </div>
+            <div class="col-12 md:col-6 lg:col-3" [style]="{'padding': '3vh'}">
+              <mat-form-field appearance="fill" floatLabel="always" class="form-element">
+                <mat-label>Price</mat-label>
+                <input id="price" matInput type="number" class="example-right-align" placeholder="0" [(ngModel)]="price">
+                <span matTextPrefix>$&nbsp;</span>
+              </mat-form-field>
+            </div>
+            <div class="col-12 md:col-6 lg:col-3" [style]="{'padding': '3vh'}">
+              <div class="form-element">
+                <button mat-raised-button color="primary" type="submit" class="button" (click)="save()" >Guardar</button>
+              </div>
+              <div class="form-element">
+                <button mat-raised-button color="secondary" type="submit" class="button" (click)="cancel()">Cancelar</button>
+              </div>
+            </div>
+          </div>
+      </mat-card>
+    </div>
+  </mat-card-content>
+</mat-card>

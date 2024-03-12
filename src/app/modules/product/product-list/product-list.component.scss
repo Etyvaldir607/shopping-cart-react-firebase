@@ -1,0 +1,19 @@
+.md-toolbar-tools h1 {
+  font-size: inherit;
+  font-weight: inherit;
+  margin: inherit;
+}
+
+.mat-mdc-table {
+  width: 100%;
+  max-height: 500px;
+  overflow: auto;
+}
+
+.mat-column-name {
+  height: 100px;
+}
+
+button {
+  margin: 16px 8px;
+}

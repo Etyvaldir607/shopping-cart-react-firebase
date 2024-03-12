@@ -1,0 +1,7 @@
+<ng-template [ngIf]="isEdit === false" [ngIfElse]="productEdit">
+  <app-product-list (createProduct)="createProduct($event)"></app-product-list>
+</ng-template>
+
+<ng-template #productEdit>
+  <app-product-edit [id]="id" (leaveEvent)="leaveEvent($event)"></app-product-edit>
+</ng-template>
