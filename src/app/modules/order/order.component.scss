@@ -1,0 +1,13 @@
+.grid-panel{
+  display: flex;
+  justify-content: space-between;
+}
+
+.panel{
+  min-width: 48%;
+}
+
+.card{
+  margin-bottom: 20px;
+  background-color: lightgray;
+}

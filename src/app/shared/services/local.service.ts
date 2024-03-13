@@ -18,6 +18,11 @@ export class LocalService {
     sessionStorage.setItem(key, JSON.stringify(update_list));
   }
 
+  // Get a item in local storage
+  getItem(list: any, id: any): IProduct {
+    return list.find((item: IProduct) => (item.Id === id))
+  }
+
   // Get a list from local storage
   getList(key: string): object[] {
     let list = sessionStorage.getItem(key);

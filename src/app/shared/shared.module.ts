@@ -9,8 +9,6 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 
-// Pipes
-//import { RecortarPipe } from "./pipes/recortar";
 //import { ToastComponent } from './components/toast/toast.component';
 //import { ToastModule } from 'primeng/toast';
 

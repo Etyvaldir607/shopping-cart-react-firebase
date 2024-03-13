@@ -11,13 +11,8 @@ import { LocalService } from 'src/app/shared/services/local.service';
 export class ProductListComponent {
   @Output() leaveEvent = new EventEmitter();
 
-
   products: IProduct[] = [];
   displayedColumns: string[] = ['Id', 'Name', 'Price', 'IsActive', 'Actions'];
-
-  loading: boolean = true;
-  search: string | null = null;
-  display: boolean = false;
   @Output() createProduct: EventEmitter<number> = new EventEmitter; // emite el evento crear o editar product
   hasAuthenticated: boolean = false;
 
@@ -71,7 +66,6 @@ export class ProductListComponent {
       this.ProductService.getAll().subscribe(
         async res => {
           this.products = await res;
-          this.loading = false;
         }
       )
     }

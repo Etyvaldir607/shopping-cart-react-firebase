@@ -1,0 +1,12 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span>Pizzeria</span>
+    <span class="header-spacer"></span>
+    <ng-template [ngIf]="amountTotal >= 1">
+      <div class="demo-section" aria-hidden="false">{{'$' + priceTotal }}</div>
+      <div class="demo-section">
+        <mat-icon [matBadge]="amountTotal" matBadgeColor="warn" class="header-icon" aria-hidden="false">shopping_cart</mat-icon>
+      </div>
+    </ng-template>
+  </mat-toolbar-row>
+</mat-toolbar>
