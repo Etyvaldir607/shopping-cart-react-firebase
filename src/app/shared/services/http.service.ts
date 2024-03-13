@@ -41,4 +41,8 @@ export class HttpService {
         return this.http.put<T>(this.realPath(url), body, { headers: headersAux, responseType: 'json', params: { blockui: blockui.toString() } });
     }
 
+    //public deleteJson<T>(url: string, body: any): Observable<T> {
+    //  return this.http.delete<T>(this.realPath(url), body);
+    //}
+
 }
