@@ -8,5 +8,15 @@
         <mat-icon [matBadge]="amountTotal" matBadgeColor="warn" class="header-icon" aria-hidden="false">shopping_cart</mat-icon>
       </div>
     </ng-template>
+    <ng-template [ngIf]="hasAuthenticated" [ngIfElse]="login">
+      <span mat-icon-button (click)="logout()">
+        <mat-icon aria-hidden="false">logout</mat-icon>
+      </span>
+    </ng-template>
+    <ng-template #login>
+      <span mat-icon-button (click)="logout()">
+        <mat-icon aria-hidden="false">login</mat-icon>
+      </span>
+    </ng-template>
   </mat-toolbar-row>
 </mat-toolbar>

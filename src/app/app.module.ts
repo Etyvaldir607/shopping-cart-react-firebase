@@ -8,6 +8,13 @@ import { LayoutModule } from './layout/layout.module';
 import { SharedModule } from './shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { initializeApp, provideFirebaseApp } from "@angular/fire/app";
+import { environment } from '../environments/environment';
+import { provideAuth, getAuth } from "@angular/fire/auth";
+import { LoginModule } from './modules/login/login.module';
+import { FIREBASE_OPTIONS } from '@angular/fire/compat';
+import { AuthService } from './shared/services/auth.service';
+
 
 @NgModule({
   declarations: [
@@ -23,9 +30,14 @@ import { HttpClientModule } from '@angular/common/http';
     SharedModule,
     FormsModule,
     //ToastModule,
-    //LoginModModule,
+
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideAuth(() => getAuth()),
   ],
-  providers: [],
+  providers: [
+    { provide: FIREBASE_OPTIONS, useValue: environment.firebase },
+    AuthService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

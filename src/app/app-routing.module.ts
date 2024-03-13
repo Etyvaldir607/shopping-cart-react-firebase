@@ -1,8 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
+import { LoginComponent } from './modules/login/login.component';
+import { adminGuard } from './shared/guards/admin.guard';
 
 const routes: Routes = [
+  {path: '', redirectTo: 'order', pathMatch: 'full'},
   {
     path: '',
     component: LayoutComponent,
@@ -16,7 +19,8 @@ const routes: Routes = [
         loadChildren: () => import('./modules/order/order.module').then(m => m.OrderModule),
       },
     ]
-  }
+  },
+  {path: 'login', component: LoginComponent}
 
 
 ];

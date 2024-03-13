@@ -1,0 +1,35 @@
+<app-header></app-header>
+<div class="flex flex-wrap align-items-center justify-content-center" >
+  <div class="container">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          <div class="md-toolbar-tools">
+            <h1 class="title-login">INICIAR SESIÓN</h1>
+            <p class="sub-text-login">Ingrese su usuario y contraseña</p>
+          </div>
+        </mat-card-title>
+      </mat-card-header>
+      <div class="grid pt-4">
+        <div class="col-12 md:col-6 lg:col-3 form-item" [style]="{'padding': '3vh'}">
+          <mat-form-field appearance="fill" class="form-element">
+            <mat-label>email</mat-label>
+            <input id="email" matInput placeholder="email" [(ngModel)]="email">
+          </mat-form-field>
+        </div>
+        <div class="col-12 md:col-6 lg:col-3 form-item" [style]="{'padding': '3vh'}">
+          <mat-form-field appearance="fill" floatLabel="always" class="form-element">
+            <mat-label>Password</mat-label>
+            <input id="password" matInput type="password" floatLabel="always" placeholder="**********" [(ngModel)]="password">
+          </mat-form-field>
+        </div>
+        <div class="col-12 md:col-6 lg:col-3" [style]="{'padding': '3vh'}">
+          <div class="form-element">
+            <button mat-raised-button color="primary" type="submit" class="button" (click)="login()" >Guardar</button>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+
