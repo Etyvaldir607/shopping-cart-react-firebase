@@ -54,7 +54,7 @@ export class AuthService {
   async logOut() {
     this.afireAuth.signOut().then(()=> {
       localStorage.removeItem('user')
-      this.router.navigate(['login'])
+      //this.router.navigate(['login'])
     })
   }
 

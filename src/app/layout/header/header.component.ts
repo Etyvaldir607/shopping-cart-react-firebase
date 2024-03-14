@@ -38,6 +38,6 @@ export class HeaderComponent implements OnInit{
   logout(){
     this.hasAuthenticated = false;
     this.authService.logOut();
-    this.router.navigate(['']);
+    this.router.navigate(['order']);
   }
 }
