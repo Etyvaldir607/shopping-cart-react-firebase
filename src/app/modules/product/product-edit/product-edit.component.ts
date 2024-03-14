@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IProduct } from 'src/app/core/models/product.interface';
 import { ProductService } from 'src/app/core/services/product.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
 import { LocalService } from 'src/app/shared/services/local.service';
 
 @Component({
@@ -25,23 +26,25 @@ export class ProductEditComponent {
     //private toast: ToastComponent,
     private productService: ProductService,
     private localService: LocalService,
+    private authService: AuthService,
     //private confirmationService: ConfirmationService,
   ) {
   }
 
   ngOnInit(): void {
+    this.hasAuthenticated = this.authService.isLoginIn
     if(this.id != null && this.id != 0){
       this.getProduct();
     }
   }
 
   /**
-   * Set bodega interface from bodegaService
+   * Set producto interface from producto Service
    * @return void
    *
    */
   getProduct(){
-    if (this.hasAuthenticated == false) {
+    if (this.hasAuthenticated === false) {
       let res = this.getProductItem(this.getProductList(), this.id)
       this.name = res.Name;
       this.price = res.Price;
@@ -65,6 +68,7 @@ export class ProductEditComponent {
    *
    */
   save(){
+    console.log(this.hasAuthenticated)
     const data: IProduct = {
       Name:                 this.name,
       Price:                this.price,
@@ -82,7 +86,7 @@ export class ProductEditComponent {
       }
       this.cancel();
 
-      console.log(this.getProductList());
+      //console.log(this.getProductList());
     } else {
       if (this.id != 0) { // update
         data.Id = this.id;

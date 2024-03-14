@@ -1,0 +1,52 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // This rule allows anyone with your Firestore database reference to view, edit,
+    // and delete all data in your Firestore database. It is useful for getting
+    // started, but it is configured to expire after 30 days because it
+    // leaves your app open to attackers. At that time, all client
+    // requests to your Firestore database will be denied.
+    //
+    // Make sure to write security rules for your app before that time, or else
+    // all client requests to your Firestore database will be denied until you Update
+    // your rules
+    match /{document=**} {
+      allow read, write: if request.time < timestamp.date(2024, 4, 12);
+    }
+
+    match /users/{document} {
+
+      function getRole(role) {
+        return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.roles[role]
+      }
+
+      allow read;
+      allow create: if request.resource.data.roles.keys().hasAny(['admin', 'editor']) == false;
+      allow update: if getRole('admin') == true;
+    }
+
+    match /products/{document} {
+
+      function getRole(role) {
+        return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.roles[role]
+      }
+
+      allow read;
+      allow create: if request.resource.data.roles.keys().hasAny(['admin', 'editor']) == false;
+      allow update: if getRole('admin') == true;
+    }
+
+    match /orders/{document} {
+
+      function getRole(role) {
+        return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.roles[role]
+      }
+
+      allow read: if getRole('subscriber') == true;
+      allow update: if getRole('editor') == true;
+      allow create, delete: if getRole('admin') == true;
+    }
+  }
+}

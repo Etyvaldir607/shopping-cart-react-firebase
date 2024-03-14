@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { IProduct } from 'src/app/core/models/product.interface';
 import { ProductService } from 'src/app/core/services/product.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
 import { LocalService } from 'src/app/shared/services/local.service';
 
 @Component({
@@ -19,12 +20,13 @@ export class ProductListComponent {
   constructor(
     private ProductService: ProductService,
     private localService: LocalService,
-
+    private authService: AuthService,
     //private confirmationService: ConfirmationService,
     //private toast: ToastComponent
   ) { }
 
   ngOnInit(): void {
+    this.hasAuthenticated = this.authService.isLoginIn
     this.getAllProducts()
   }
 
@@ -60,6 +62,7 @@ export class ProductListComponent {
    *
    */
   getAllProducts(){
+    console.log(this.hasAuthenticated)
     if (this.hasAuthenticated === false) {
       this.products = this.getProductList();
     } else {
