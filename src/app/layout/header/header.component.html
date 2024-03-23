@@ -15,9 +15,16 @@
       </span>
     </ng-template>
     <ng-template #login>
-      <span style="padding-left: 40px;" mat-icon-button (click)="logout()">
-        <mat-icon aria-hidden="false">login</mat-icon>
-      </span>
+      <ng-template [ngIf]="router.url !== '/login'" [ngIfElse]="back">
+        <span style="padding-left: 40px;" mat-icon-button (click)="router.navigate(['login'])">
+          <mat-icon aria-hidden="false">login</mat-icon>
+        </span>
+      </ng-template>
+      <ng-template #back>
+        <span style="padding-left: 40px;" mat-icon-button (click)="router.navigate(['order'])">
+          Go Back
+        </span>
+      </ng-template>
     </ng-template>
   </mat-toolbar-row>
 </mat-toolbar>
