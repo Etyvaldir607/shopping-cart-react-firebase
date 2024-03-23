@@ -34,7 +34,8 @@ export class LocalService {
 
   // Remove a item from local storage
   deleteItem(key: string, list: any, id: any): void {
-    let update_list = list.filter( (item: IProduct) => !(item.Id === id))
+    let isFirst = false;
+    let update_list = list.filter( (item: IProduct) => (item.Id === id && isFirst === false) ? (isFirst = true, null) : item);
     sessionStorage.setItem(key, JSON.stringify(update_list));
   }
 

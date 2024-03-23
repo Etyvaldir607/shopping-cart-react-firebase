@@ -6,6 +6,9 @@ import { ProductService } from 'src/app/core/services/product.service';
 import { LocalService } from 'src/app/shared/services/local.service';
 import { CartService } from 'src/app/shared/services/cart.service';
 import { HeaderService } from 'src/app/shared/services/header.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
+import { OrderService } from 'src/app/core/services/order.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-order',
@@ -25,12 +28,15 @@ export class OrderComponent {
     private localService: LocalService,
     private cartService: CartService,
     public headerService: HeaderService,
+    public authService: AuthService,
+    public orderService: OrderService,
     //private confirmationService: ConfirmationService,
     //private toast: ToastComponent
   ) { }
 
   ngOnInit(): void {
-    this.getAllProducts()
+    this.hasAuthenticated = this.authService.isLoginIn;
+    this.getAllProducts();
   }
 
   /**
@@ -39,16 +45,31 @@ export class OrderComponent {
    *
    */
   getAllProducts(){
+    //if (this.hasAuthenticated === false) {
+    //  this.products = this.getProductList();
+    //  this.order_products = this.products.map((item: IProduct) => (item) ? {...item, Amount: 0} : item )
+    //} else {
+    this.ProductService.getAll().subscribe(
+      (res) => {
+        console.log(res)
+        this.products = res;
+        this.order_products = this.products.map((item: IProduct) => (item) ? { ...item } : item);
+        this.getAllProductsInCart();
+
+      }
+    )
+    //}
+  }
+
+  getAllProductsInCart(){
     if (this.hasAuthenticated === false) {
-      this.products = this.getProductList();
-      this.order_products = this.products.map((item: IProduct) => (item) ? {...item, Amount: 0} : item )
-      this.cart_products = this.cartService.getItems();
+      this.localService.getList('cart').map((item: any) => !(this.products.some(val => (val.Id === item.Id))) || this.add(item, true) )
     } else {
-      this.ProductService.getAll().subscribe(
-        async res => {
-          this.products = await res;
-        }
-      )
+      this.orderService.getAll().subscribe(res =>{
+        this.cartService.clearCart()
+        res.map((item) => !(this.products.some(val => (val.Id === item.Id))) || this.add(item, true))
+        this.headerService.showCart(this.getTotals(res));
+      })
     }
   }
 
@@ -59,26 +80,45 @@ export class OrderComponent {
   remove(item: any) {
     this.cartService.removeItem(item)
     this.cart_products = this.cartService.getItems()
-    let show_card = this.getTotals()
-    this.headerService.showCart(show_card);
-
+    if (this.hasAuthenticated === false) {
+      if (this.cart_products.length < 1) {
+        this.localService.removeItem('cart')
+      } else {
+        this.localService.deleteItem('cart', this.localService.getList('cart') , item.Id)
+      }
+      this.headerService.showCart(this.getTotals(this.localService.getList('cart')));
+    } else {
+      this.orderService.deleteOrder(item.Id)
+    }
   }
 
-  add(item: any) {
-    this.cartService.addItem(item)
-    this.cart_products = this.cartService.getItems()
-    let show_card = this.getTotals()
-    this.headerService.showCart(show_card);
+  add(item: any, from_recovery: boolean = false) {
+    this.cartService.addItem(item);
+    this.cart_products = this.cartService.getItems();
+    if (this.hasAuthenticated === false) {
+      if (!from_recovery) {
+        if (this.cart_products.length < 1) {
+          this.localService.postItem('cart', item, [])
+        } else {
+          this.localService.postItem('cart', item, this.localService.getList('cart'))
+        }
+      }
+      this.headerService.showCart(this.getTotals(this.localService.getList('cart')));
+    } else {
+      if (!from_recovery) {
+        this.orderService.postOrder(item)
+      }
+    }
   }
 
-  getTotals(){
+  getTotals(list:any[]){
     let cart = {
       priceTotal: 0,
       amountTotal: 0,
     }
-    this.cart_products.map((item) => {
-      cart.priceTotal = cart.priceTotal + (item.Price * item.Amount)
-      cart.amountTotal = cart.amountTotal + item.Amount
+    list.map((item) => {
+      cart.priceTotal = cart.priceTotal + item.Price
+      cart.amountTotal = cart.amountTotal + 1
     })
     return cart
   }

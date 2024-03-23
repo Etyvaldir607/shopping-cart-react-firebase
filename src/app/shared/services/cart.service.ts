@@ -36,9 +36,7 @@ export class CartService {
     return this.items;
   }
 
-  clearCart(item: any) :void {
+  clearCart() :void {
     this.items = []
   }
-
-
 }
