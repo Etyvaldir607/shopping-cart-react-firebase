@@ -38,8 +38,18 @@ service cloud.firestore {
       allow update: if getRole('admin') == true;
     }
 
-    match /orders/{document} {
+    match users/{user}/orders/{document} {
 
+      function getRole(role) {
+        return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.roles[role]
+      }
+
+      allow read: if getRole('subscriber') == true;
+      allow update: if getRole('editor') == true;
+      allow create, delete: if getRole('admin') == true;
+    }
+
+    match users/{user}/orders/{order}/products/{document} {
       function getRole(role) {
         return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.roles[role]
       }
