@@ -62,13 +62,12 @@ export class ProductListComponent {
    *
    */
   getAllProducts(){
-    console.log(this.hasAuthenticated)
     if (this.hasAuthenticated === false) {
       this.products = this.getProductList();
     } else {
       this.ProductService.getAll().subscribe(
         async res => {
-          this.products = await res;
+          this.products = res;
         }
       )
     }
@@ -88,15 +87,7 @@ export class ProductListComponent {
       this.localService.deleteItem('products', this.getProductList(), id)
       this.cancel();
     } else {
-      //this.ProductService.deleteProduct(id).subscribe(
-      //  () => {
-      //    //this.toast.successMessage('', 'Product eliminada con éxito.')
-      //    this.getAllProducts()
-      //  },
-      //  () => {
-      //    //this.toast.errorMessage('Error', 'No se eliminó la product.');
-      //  }
-      //)
+      this.ProductService.deleteProduct(id)
     }
 
   }

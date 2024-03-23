@@ -1,28 +1,33 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { HttpService } from 'src/app/shared/services/http.service';
-import { environment } from 'src/environments/environment';
+import { Observable, map, of } from 'rxjs';
 import { IProduct } from '../models/product.interface';
-import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
+  products: AngularFirestoreCollection<IProduct>;
 
   constructor(
-    private httpService: HttpService,
     private afireFirestore: AngularFirestore
   ) {
-    //this.product = afireFirestore.doc('products');
+    this.products = this.afireFirestore.collection("products")
   }
 
   /**
    * make request to get all rows product collection
-   * @returns {any[]}
+   * @returns {IProduct[]}
    */
-  getAll(): Observable<any[]> {
-    return this.afireFirestore.collection('products').valueChanges();
+  getAll(): Observable<IProduct[]> {
+    return this.products.snapshotChanges().pipe(
+      map( snapshots => {
+        return snapshots.map( s => {
+          const data:any = s.payload.doc.data()
+          return {...data, Id: s.payload.doc.id}
+        })
+      })
+    )
   }
 
   /**
@@ -30,10 +35,8 @@ export class ProductService {
    * @param id
    * @returns {IProduct}
    */
-  getProduct(id: number) : Observable<any> {
-    console.log('test');
-    return of();
-    //return this.httpService.getJson<IProduct>(`${this._baseURL}/${id}`);
+  getProduct(id: any) : Observable<any> {
+    return this.products.doc(id).valueChanges();
   }
 
   /**
@@ -42,8 +45,8 @@ export class ProductService {
    * @returns {IProduct}
    */
   postProduct(product: IProduct): Observable<any> {
-    this.afireFirestore.collection('products').add(product);
-    return this.afireFirestore.collection('products').valueChanges();
+    this.products.add(product);
+    return this.products.valueChanges();
   }
 
   /**
@@ -51,9 +54,9 @@ export class ProductService {
    * @param id
    * @param product
    */
-  putProduct(id:number, product: IProduct): Observable<any> {
-    this.afireFirestore.collection('products').doc('product').update(product);
-    return this.afireFirestore.collection('products').valueChanges();
+  putProduct(id:any, product: IProduct): Observable<any> {
+    this.products.doc(id).update(product);
+    return this.products.valueChanges();
   }
 
   /**
@@ -61,8 +64,8 @@ export class ProductService {
    * @param id
    * @param status
    */
-  deleteProduct(id: number, status: boolean) {
-    this.afireFirestore.collection('products').doc('product.Id').delete()
-    return this.afireFirestore.collection('products').valueChanges();
+  deleteProduct(id:any): Observable<any> {
+    this.products.doc(id).delete()
+    return this.products.valueChanges();
   }
 }

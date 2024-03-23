@@ -1,6 +1,7 @@
 export interface IProduct {
-  Id?:            number;
+  Id?:            string | number;
   Name?:          string;
   Price?:         number;
+  Amount?:        number;
   IsActive?:      boolean;
 }
