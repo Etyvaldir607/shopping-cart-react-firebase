@@ -10,6 +10,10 @@ const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
+        path: 'dashboard',
+        loadChildren: () => import('./modules/dashboard/dashboard.module').then(m => m.DashboardModule),
+      },
+      {
         path: 'product',
         loadChildren: () => import('./modules/product/product.module').then(m => m.ProductModule),
       },

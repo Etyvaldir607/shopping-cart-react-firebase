@@ -6,7 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from './core/core.module';
 import { LayoutModule } from './layout/layout.module';
 import { SharedModule } from './shared/shared.module';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { initializeApp, provideFirebaseApp } from "@angular/fire/app";
 import { environment } from '../environments/environment';
@@ -14,6 +14,7 @@ import { provideAuth, getAuth } from "@angular/fire/auth";
 import { LoginModule } from './modules/login/login.module';
 import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { AuthService } from './shared/services/auth.service';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
@@ -24,6 +25,8 @@ import { AuthService } from './shared/services/auth.service';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    ReactiveFormsModule,
+    RouterModule,
     HttpClientModule,
     CoreModule,
     LayoutModule,
