@@ -21,6 +21,9 @@ export class ShoppingCartService {
     this.shopping_cart_items = this.shopping_carts.doc(this.cartId).collection('items')
   }
 
+  /**
+   * Get or Create current cart
+   */
   private async getOrCreateCartId() {
     if (localStorage.getItem('cartId')) {
       this.cartId = localStorage.getItem('cartId')
@@ -30,41 +33,67 @@ export class ShoppingCartService {
     }
   }
 
-  async getCart(): Promise<Observable<any>> {
-    return this.shopping_cart_items.get().pipe(
-      map( snapshots => {
-        snapshots.forEach(s => {
-          new ShoppingCart(s.data())
-        })
-      })
+  /**
+   * get cart data with items
+   * @returns current cart
+   */
+  async getCart(): Promise<Observable<ShoppingCart>> {
+    return <Observable<ShoppingCart>>this.shopping_cart_items.get().pipe(
+      map( snapshots => new ShoppingCart(snapshots.docs.map(s => s.data()) as {})) // get items as map
     )
   }
 
+  /**
+   * Add item to cart
+   * @param product item selected
+   */
   async addToCart(product: IProduct) {
     this.updateItem(product, 1);
   }
 
+  /**
+   * Remove item from cart
+   * @param product item selected
+   */
   async removeFromCart(product: IProduct) {
     this.updateItem(product, -1);
   }
 
+  /**
+   * Clear items into cart
+   */
+  async clearFromCart(){
+    this.shopping_cart_items.get().subscribe( s => s.docs.map( cart_product => cart_product.ref.delete().then(()=> console.log(`Deleting items (${cart_product.id})`)).catch(err => console.log(err))))
+  }
+
+
+  /**
+   * Clear items into cart and delete current cart, and delete local storage
+   */
   async clearCart() {
     this.shopping_carts.get().subscribe(carts => {
       carts.forEach((cart) => {
         if (cart.id == this.cartId ) {
           this.shopping_carts.doc(cart.id).collection('items').get().subscribe(cart_products => {
-              cart_products.docs[0].ref.delete()
-                .then(() => console.log(`Deleting items (${cart.id})`))
-                .catch(error => {console.log(error); });
+            cart_products.docs.map( cart_product => {
+              cart_product.ref.delete()
+              .then(() => console.log(`Deleting items (${cart_product.id})`))
+              .catch(error => {console.log(error); });
+            })
           })
           cart.ref.delete()
             .then(() => console.log(`Deleting cart (${cart.id})`))
             .catch(error => {console.log(error); });
+          localStorage.removeItem('cartId')
         }
       });
     })
   }
 
+  /**
+   * Create cart
+   * @returns created cart id
+   */
   private create() : Promise<any>{
     return new Promise<any>((resolve, reject) => {
       this.afireFirestore.collection('shopping-carts').add({
@@ -79,6 +108,11 @@ export class ShoppingCartService {
     return <any>this.shopping_cart_items.ref.where('Id', '==', productId).get();
   }
 
+  /**
+   * Get item doc info
+   * @param productId item selected
+   * @returns data observed
+   */
   private getItemDocument(productId: string): Observable<AngularFirestoreDocument> {
     return <any>this.shopping_carts.doc(this.cartId).collection<AngularFirestoreDocument>('items', ref => ref.where('Id', '==', productId)).get().pipe(
       map(items => {
@@ -88,6 +122,11 @@ export class ShoppingCartService {
     );
   }
 
+  /**
+   * Get item product info
+   * @param productId item selected
+   * @returns data observed
+   */
   private getItemData(productId: string): Observable<IProduct> {
     return <any>this.shopping_carts.doc(this.cartId).collection<IProduct>('items', ref => ref.where('Id', '==', productId)).valueChanges().pipe(
       map(items => {
@@ -97,6 +136,11 @@ export class ShoppingCartService {
     );
   }
 
+  /**
+   * Update item into cart
+   * @param product item selected
+   * @param change amount modified
+   */
   private async updateItem(product: any, change: number) {
     let itemProduct:IProduct = await lastValueFrom(this.getItemData(product.Id).pipe(take(1)))
     this.getItemDocument(product.Id).subscribe((item_value: AngularFirestoreDocument)  => {

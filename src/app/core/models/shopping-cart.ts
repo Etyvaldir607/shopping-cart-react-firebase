@@ -10,7 +10,7 @@ export class ShoppingCart {
     this.itemsMap = itemsMap || {};
     for (let Id in itemsMap) {
       let item = itemsMap[Id];
-      this.items.push(new IShoppingCartItem({ ...item, Id: Id }));
+      this.items.push(new IShoppingCartItem({ ...item}));
     }
   }
 

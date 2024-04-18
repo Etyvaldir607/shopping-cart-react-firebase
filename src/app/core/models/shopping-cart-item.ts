@@ -1,9 +1,7 @@
-import { IProduct } from './product.interface';
-
 export class IShoppingCartItem {
-  Id?:            string | number;
+  Id?:            string;
   Name?:          string;
-  ImageUrl?:      string | null;
+  ImageUrl?:      string;
   Price?:         number;
   Amount?:        number;
   IsActive?:      boolean;
