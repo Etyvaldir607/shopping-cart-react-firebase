@@ -3,10 +3,10 @@
   <mat-toolbar-row>
     <span>Pizzeria</span>
     <span class="header-spacer"></span>
-    <ng-template [ngIf]="amountTotal >= 1">
-      <div class="demo-section" aria-hidden="false">{{'$' + priceTotal }}</div>
+    <ng-template *ngIf="cart$ | async as cart" [ngIf]="cart.totalItemsCount >= 1">
+      <div class="demo-section" aria-hidden="false">{{'$' + cart.totalPrice }}</div>
       <div class="demo-section">
-        <mat-icon [matBadge]="amountTotal" matBadgeColor="warn" class="header-icon" aria-hidden="false">shopping_cart</mat-icon>
+        <mat-icon [matBadge]="cart.totalItemsCount" matBadgeColor="warn" class="header-icon" aria-hidden="false">shopping_cart</mat-icon>
       </div>
     </ng-template>
     <ng-template [ngIf]="hasAuthenticated" [ngIfElse]="login">

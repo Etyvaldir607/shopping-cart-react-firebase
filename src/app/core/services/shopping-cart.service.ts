@@ -38,8 +38,8 @@ export class ShoppingCartService {
    * @returns current cart
    */
   async getCart(): Promise<Observable<ShoppingCart>> {
-    return <Observable<ShoppingCart>>this.shopping_cart_items.get().pipe(
-      map( snapshots => new ShoppingCart(snapshots.docs.map(s => s.data()) as {})) // get items as map
+    return <any>this.shopping_cart_items.snapshotChanges().pipe(
+      map( snapshots => new ShoppingCart(snapshots.map( items => items.payload.doc.data()) as {})) // get items from snapshot as map
     )
   }
 

@@ -1,14 +1,13 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { IProduct } from 'src/app/core/models/product.interface';
-import { IOrder, IOrderProduct } from 'src/app/core/models/order.interface';
-
 import { ProductService } from 'src/app/core/services/product.service';
 import { LocalService } from 'src/app/shared/services/local.service';
 import { CartService } from 'src/app/shared/services/cart.service';
 import { HeaderService } from 'src/app/shared/services/header.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
-import { OrderService } from 'src/app/core/services/order.service';
-import { take } from 'rxjs';
+import { ShoppingCartService } from 'src/app/core/services/shopping-cart.service';
+import { ShoppingCart } from 'src/app/core/models/shopping-cart';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-order',
@@ -17,113 +16,79 @@ import { take } from 'rxjs';
 })
 export class OrderComponent {
 
-//@Output() showCart = new EventEmitter<any>();
-  products: IProduct[] = [];
   order_products: any[] = [];
   cart_products: any[] = [];
   hasAuthenticated: boolean = false;
+  cart$: Observable<ShoppingCart> = of();
 
   constructor(
     private ProductService: ProductService,
-    private localService: LocalService,
     private cartService: CartService,
     public headerService: HeaderService,
     public authService: AuthService,
-    public orderService: OrderService,
-    //private confirmationService: ConfirmationService,
-    //private toast: ToastComponent
-  ) { }
+    public shoppingCartService: ShoppingCartService
+  ) {
+  }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.hasAuthenticated = this.authService.isLoginIn;
     this.getAllProducts();
+    await this.getAllProductsInCart();
   }
 
   /**
-   * Call getAllProducts service
+   * Call get all products service
    * @return object array
    *
    */
   getAllProducts(){
-    //if (this.hasAuthenticated === false) {
-    //  this.products = this.getProductList();
-    //  this.order_products = this.products.map((item: IProduct) => (item) ? {...item, Amount: 0} : item )
-    //} else {
-    this.ProductService.getAll().subscribe(
-      (res) => {
-        console.log(res)
-        this.products = res;
-        this.order_products = this.products.map((item: IProduct) => (item) ? { ...item } : item);
-        this.getAllProductsInCart();
-
-      }
-    )
-    //}
+    this.ProductService.getAll().subscribe((res: IProduct[]) => this.order_products = res)
   }
 
-  getAllProductsInCart(){
+  /**
+   * Call get all products in cart service
+   */
+  async getAllProductsInCart(){
     if (this.hasAuthenticated === false) {
-      this.localService.getList('cart').map((item: any) => !(this.products.some(val => (val.Id === item.Id))) || this.add(item, true) )
+      this.cart_products = this.cartService.getItems();
+      this.headerService.showCart(this.cartService.getTotals());
     } else {
-      this.orderService.getAll().subscribe(res =>{
-        this.cartService.clearCart()
-        res.map((item) => !(this.products.some(val => (val.Id === item.Id))) || this.add(item, true))
-        this.headerService.showCart(this.getTotals(res));
-      })
+      this.cart$ = await this.shoppingCartService.getCart();
     }
   }
 
-  getProductList() {
-    return this.localService.getList('products');
-  }
-
-  remove(item: any) {
-    this.cartService.removeItem(item)
-    this.cart_products = this.cartService.getItems()
+  /**
+   * remove current item
+   * @param item current item
+   */
+  async remove(item: any) {
     if (this.hasAuthenticated === false) {
-      if (this.cart_products.length < 1) {
-        this.localService.removeItem('cart')
-      } else {
-        this.localService.deleteItem('cart', this.localService.getList('cart') , item.Id)
-      }
-      this.headerService.showCart(this.getTotals(this.localService.getList('cart')));
+      this.cartService.removeItem(item)
+      this.cart_products = this.cartService.getItems()
+      this.headerService.showCart(this.cartService.getTotals());
     } else {
-      this.orderService.deleteOrder(item.Id)
+      this.shoppingCartService.removeFromCart(item)
     }
   }
 
-  add(item: any, from_recovery: boolean = false) {
-    this.cartService.addItem(item);
-    this.cart_products = this.cartService.getItems();
+  /**
+   * remove current item
+   * @param item current item
+   */
+  async add(item: any) {
     if (this.hasAuthenticated === false) {
-      if (!from_recovery) {
-        if (this.cart_products.length < 1) {
-          this.localService.postItem('cart', item, [])
-        } else {
-          this.localService.postItem('cart', item, this.localService.getList('cart'))
-        }
-      }
-      this.headerService.showCart(this.getTotals(this.localService.getList('cart')));
+      this.cartService.addItem(item);
+      this.cart_products = this.cartService.getItems();
+      this.headerService.showCart(this.cartService.getTotals());
     } else {
-      if (!from_recovery) {
-        this.orderService.postOrder(item)
-      }
+      this.shoppingCartService.addToCart(item)
     }
   }
 
-  getTotals(list:any[]){
-    let cart = {
-      priceTotal: 0,
-      amountTotal: 0,
-    }
-    list.map((item) => {
-      cart.priceTotal = cart.priceTotal + item.Price
-      cart.amountTotal = cart.amountTotal + 1
-    })
-    return cart
-  }
-
-  getRandomId() {
-    return Math.floor((Math.random()*6)+1);
+  /**
+   * remove all items
+   */
+  clearCart() {
+    this.shoppingCartService.clearFromCart();
   }
 }
