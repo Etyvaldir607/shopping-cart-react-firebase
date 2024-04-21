@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { IProduct } from 'src/app/core/models/product.interface';
 import { ProductService } from 'src/app/core/services/product.service';
-import { LocalService } from 'src/app/shared/services/local.service';
 import { CartService } from 'src/app/shared/services/cart.service';
 import { HeaderService } from 'src/app/shared/services/header.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { ShoppingCartService } from 'src/app/core/services/shopping-cart.service';
 import { ShoppingCart } from 'src/app/core/models/shopping-cart';
 import { Observable, of } from 'rxjs';
+import { IShoppingCartItem } from 'src/app/core/models/shopping-cart-item';
 
 @Component({
   selector: 'app-order',
@@ -16,10 +16,11 @@ import { Observable, of } from 'rxjs';
 })
 export class OrderComponent {
 
-  order_products: any[] = [];
+  order_products: IShoppingCartItem[] = [];
   cart_products: any[] = [];
   hasAuthenticated: boolean = false;
   cart$: Observable<ShoppingCart> = of();
+  displayedColumns: string[] = ['name', 'price', 'amount', 'sub-total' , 'actions'];
 
   constructor(
     private ProductService: ProductService,
@@ -42,53 +43,87 @@ export class OrderComponent {
    *
    */
   getAllProducts(){
-    this.ProductService.getAll().subscribe((res: IProduct[]) => this.order_products = res)
+    this.ProductService.getAll().subscribe((res: any[]) => this.order_products = res)
   }
 
   /**
    * Call get all products in cart service
    */
   async getAllProductsInCart(){
-    if (this.hasAuthenticated === false) {
-      this.cart_products = this.cartService.getItems();
-      this.headerService.showCart(this.cartService.getTotals());
+    if (this.hasAuthenticated) {
+      this.cart$ = await this.shoppingCartService.getCart()
     } else {
-      this.cart$ = await this.shoppingCartService.getCart();
+      this.cart$ = await this.cartService.getCart();
     }
   }
 
   /**
-   * remove current item
+   * remove selected item
    * @param item current item
    */
   async remove(item: any) {
-    if (this.hasAuthenticated === false) {
-      this.cartService.removeItem(item)
-      this.cart_products = this.cartService.getItems()
-      this.headerService.showCart(this.cartService.getTotals());
-    } else {
+    if (this.hasAuthenticated) {
       this.shoppingCartService.removeFromCart(item)
+    } else {
+      this.cartService.removeItem(item)
     }
   }
 
   /**
-   * remove current item
+   * add selected item
    * @param item current item
    */
   async add(item: any) {
-    if (this.hasAuthenticated === false) {
-      this.cartService.addItem(item);
-      this.cart_products = this.cartService.getItems();
-      this.headerService.showCart(this.cartService.getTotals());
-    } else {
+    if (this.hasAuthenticated) {
       this.shoppingCartService.addToCart(item)
+    } else {
+      this.cartService.addItem(item);
     }
   }
+
+  /**
+   * update selected item
+   * @param item current item
+   * @param value current item
+   */
+  update(item: IProduct, value: number) {
+    if (this.hasAuthenticated) {
+      this.shoppingCartService.updateFromCart(item, value)
+    } else {
+      this.cartService.updateItem(item, value)
+    }
+  }
+
+  getValue(event: Event) {
+    let value = Number((event.target as HTMLInputElement).value)
+    if ( value == 0  || value < 0) {
+      (event.target as HTMLInputElement).value = '1'
+      return 1
+    }
+    return Number((event.target as HTMLInputElement).value);
+  }
+
+  /**
+   * update selected item
+   * @param item
+   */
+  delete(item: IProduct){
+    if (this.hasAuthenticated) {
+      this.shoppingCartService.deleteFromCart(item)
+    } else {
+      this.cartService.deleteItem(item)
+    }
+  }
+
 
   /**
    * remove all items
    */
   clearCart() {
-    this.shoppingCartService.clearFromCart();
+    if (this.hasAuthenticated) {
+      this.shoppingCartService.clearFromCart();
+    } else {
+      this.cartService.clearCart();
+    }
   }
 }

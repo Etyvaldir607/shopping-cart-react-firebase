@@ -35,6 +35,44 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-    margin: 0 33.33%;
+    margin: 0 30%;
   }
 }
+
+.mat-column-amount{
+  min-width: 200px;
+  width: 200px;
+  max-width: 210px;
+}
+
+
+.card-content-action{
+  display: flex;
+  align-items: center;
+  .form-input-field{
+    padding: 0 15px;
+    input.form-input {
+      text-align: center;
+    }
+  }
+}
+
+::ng-deep .mat-mdc-text-field-wrapper.mdc-text-field{
+  padding: 0 10px;
+  background-color: transparent !important;
+}
+
+input::-webkit-inner-spin-button,
+input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+//cart from cards
+//div.no-border {
+//  padding: 0 15px;
+//  input{
+//    text-align: center;
+//  }
+//}

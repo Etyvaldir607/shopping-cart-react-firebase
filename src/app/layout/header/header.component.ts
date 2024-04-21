@@ -6,6 +6,7 @@ import { ShoppingCart } from "src/app/core/models/shopping-cart";
 import { OrderService } from "src/app/core/services/order.service";
 import { ShoppingCartService } from "src/app/core/services/shopping-cart.service";
 import { AuthService } from "src/app/shared/services/auth.service";
+import { CartService } from "src/app/shared/services/cart.service";
 import { HeaderService } from "src/app/shared/services/header.service";
 
 @Component({
@@ -21,16 +22,21 @@ export class HeaderComponent implements OnInit{
   cart$: Observable<ShoppingCart> = of();
 
   constructor(
-    public headerService: HeaderService,
+    //public headerService: HeaderService,
     public authService: AuthService,
     public router: Router,
-    private shoppingCartService: ShoppingCartService
+    private shoppingCartService: ShoppingCartService,
+    private cartService: CartService,
   ) {
   }
 
   async ngOnInit() {
     this.hasAuthenticated = this.authService.isLoginIn;
-    this.cart$ = await this.shoppingCartService.getCart();
+    if (this.hasAuthenticated) {
+      this.cart$ = await this.shoppingCartService.getCart();
+    } else {
+      this.cart$ = await this.cartService.getCart();
+    }
   }
 
   logout(){
