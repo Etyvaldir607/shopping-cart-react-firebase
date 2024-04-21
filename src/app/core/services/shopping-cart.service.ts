@@ -66,7 +66,6 @@ export class ShoppingCartService {
     this.shopping_cart_items.get().subscribe( s => s.docs.map( cart_product => cart_product.ref.delete().then(()=> console.log(`Deleting items (${cart_product.id})`)).catch(err => console.log(err))))
   }
 
-
   /**
    * Clear items into cart and delete current cart, and delete local storage
    */
@@ -139,7 +138,32 @@ export class ShoppingCartService {
   /**
    * Update item into cart
    * @param product item selected
-   * @param change amount modified
+   * @param change value to insert
+   */
+  async updateFromCart(product: any, change: number) {
+    this.getItemDocument(product.Id).subscribe((item_value: AngularFirestoreDocument)  => {
+      const item = item_value
+      item.ref.update({
+        Amount: change
+      })
+    })
+  }
+
+  /**
+   * Delete item into cart
+   * @param product item selected
+   */
+  async deleteFromCart(product: any) {
+    this.getItemDocument(product.Id).subscribe((item_value: AngularFirestoreDocument)  => {
+      const item = item_value
+      item.ref.delete()
+    })
+  }
+
+  /**
+   * Update item into cart with plus or minus
+   * @param product item selected
+   * @param change value to insert
    */
   private async updateItem(product: any, change: number) {
     let itemProduct:IProduct = await lastValueFrom(this.getItemData(product.Id).pipe(take(1)))
