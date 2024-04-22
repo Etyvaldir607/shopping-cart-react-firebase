@@ -3,7 +3,7 @@
 }
 
 .header-icon {
-  padding: 0 14px;
+  padding: 0 !important;
 }
 
 .header-spacer {
@@ -16,6 +16,7 @@
   padding-right: 1rem;
   align-items: center;
   span{
+    padding: 0 14px;
     cursor: pointer;
     mat-icon{
       vertical-align: sub;
