@@ -20,3 +20,42 @@
     width: 100%;
   }
 }
+
+.content-container {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 25px;
+}
+
+.expanded {
+  margin-left: 0;
+  @media screen and (min-width: 800px) {
+    margin-left: 250px;
+  }
+}
+
+.collapsed {
+  margin-left: 0;
+  @media screen and (min-width: 800px) {
+    margin-left: 60px;
+  }
+}
+
+.mat-drawer[style] {
+  transform: none !important;
+  visibility: visible !important;
+  display: block !important;
+}
+
+::ng-deep {
+  .mat-drawer {
+    &.mat-drawer-side {
+      transform: translate3d(calc(-100% + var(--visible-drawer-space)), 0, 0);
+      visibility: visible !important; // always visible
+    }
+  }
+
+  .mat-drawer-content {
+    margin-left: var(--visible-drawer-space);
+  }
+}

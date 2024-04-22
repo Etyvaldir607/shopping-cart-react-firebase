@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 interface RouteInfo {
     path: string;
@@ -6,9 +6,12 @@ interface RouteInfo {
     icon: string;
     class: string;
 }
+
 export const ROUTES: RouteInfo[] = [
     { path: '/dashboard', title: 'Dashboard',  icon: 'dashboard', class: '' },
     { path: '/users', title: 'Users',  icon:'person', class: '' },
+    { path: '/product', title: 'Products',  icon:'inventory', class: '' },
+    { path: '/orders', title: 'Orders',  icon:'list_alt', class: '' },
 ];
 
 @Component({
@@ -17,17 +20,14 @@ export const ROUTES: RouteInfo[] = [
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit {
-  menuItems: any[] = [];
+
+  @Input() isExpanded: boolean = true;
+  @Output() toggleMenu = new EventEmitter();
+  routeLinks: any[] = [];
 
   constructor() { }
 
   ngOnInit() {
-    this.menuItems = ROUTES.filter(menuItem => menuItem);
+    this.routeLinks = ROUTES.filter(menuItem => menuItem);
   }
-  isMobileMenu() {
-      if (window.innerWidth > 991) {
-          return false;
-      }
-      return true;
-  };
 }

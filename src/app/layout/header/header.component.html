@@ -1,17 +1,11 @@
 
 <mat-toolbar class="header" color="primary">
   <mat-toolbar-row>
-    <mat-toolbar color="primary" class="example-toolbar">
-      <button mat-icon-button (click)="toggleMenu.emit(null)"><mat-icon>menu</mat-icon></button>
-      <span>Store Online</span>
-    </mat-toolbar>
     <span class="header-spacer"></span>
     <div class="header-access">
     <ng-template *ngIf="cart$ | async as cart" [ngIf]="cart.totalItemsCount >= 1">
-      <div class="demo-section" aria-hidden="false">{{'$' + cart.totalPrice }}</div>
-      <div class="demo-section">
-        <mat-icon [matBadge]="cart.totalItemsCount" matBadgeColor="warn" class="header-icon" aria-hidden="false">shopping_cart</mat-icon>
-      </div>
+      <span>{{'$' + cart.totalPrice }}</span>
+      <mat-icon [matBadge]="cart.totalItemsCount" matBadgeColor="warn" class="header-icon">shopping_cart</mat-icon>
     </ng-template>
     <ng-template [ngIf]="hasAuthenticated" [ngIfElse]="login">
       <span mat-icon-button (click)="logout()">
