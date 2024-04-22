@@ -14,4 +14,17 @@
   display: flex;
   gap: 15px;
   padding-right: 1rem;
+  align-items: center;
+  span{
+    cursor: pointer;
+    mat-icon{
+      vertical-align: sub;
+    }
+  }
+  mat-icon{
+    cursor: pointer;
+  }
+
+
+
 }
