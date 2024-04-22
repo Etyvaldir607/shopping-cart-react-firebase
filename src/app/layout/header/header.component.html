@@ -1,8 +1,12 @@
 
-<mat-toolbar color="primary">
+<mat-toolbar class="header" color="primary">
   <mat-toolbar-row>
-    <span>Pizzeria</span>
+    <mat-toolbar color="primary" class="example-toolbar">
+      <button mat-icon-button (click)="toggleMenu.emit(null)"><mat-icon>menu</mat-icon></button>
+      <span>Store Online</span>
+    </mat-toolbar>
     <span class="header-spacer"></span>
+    <div class="header-access">
     <ng-template *ngIf="cart$ | async as cart" [ngIf]="cart.totalItemsCount >= 1">
       <div class="demo-section" aria-hidden="false">{{'$' + cart.totalPrice }}</div>
       <div class="demo-section">
@@ -10,21 +14,23 @@
       </div>
     </ng-template>
     <ng-template [ngIf]="hasAuthenticated" [ngIfElse]="login">
-      <span style="padding-left: 40px;" mat-icon-button (click)="logout()">
+      <span mat-icon-button (click)="logout()">
         <mat-icon aria-hidden="false">logout</mat-icon>
       </span>
     </ng-template>
     <ng-template #login>
       <ng-template [ngIf]="router.url !== '/login'" [ngIfElse]="back">
-        <span style="padding-left: 40px;" mat-icon-button (click)="router.navigate(['login'])">
+        <span mat-icon-button (click)="router.navigate(['login'])">
           <mat-icon aria-hidden="false">login</mat-icon>
         </span>
       </ng-template>
       <ng-template #back>
-        <span style="padding-left: 40px;" mat-icon-button (click)="router.navigate(['order'])">
+        <span mat-icon-button (click)="router.navigate(['order'])">
           Go Back
         </span>
       </ng-template>
     </ng-template>
+    </div>
+
   </mat-toolbar-row>
 </mat-toolbar>

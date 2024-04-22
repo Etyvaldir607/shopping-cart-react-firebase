@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, EventEmitter, OnInit, Output } from "@angular/core";
 import { Router } from "@angular/router";
 import { Observable, of } from "rxjs";
 import { IProduct } from "src/app/core/models/product.interface";
@@ -15,6 +15,8 @@ import { HeaderService } from "src/app/shared/services/header.service";
   styleUrls: ["./header.component.scss"],
 })
 export class HeaderComponent implements OnInit{
+
+  @Output() toggleMenu: EventEmitter<any> = new EventEmitter;
 
   priceTotal: number = 0;
   amountTotal: number = 0;

@@ -1,3 +1,7 @@
+.header{
+  z-index: 100;
+}
+
 .header-icon {
   padding: 0 14px;
 }
@@ -6,12 +10,8 @@
   flex: 1 1 auto;
 }
 
-:host {
+.header-access {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.demo-section + .demo-section {
-  margin-top: 16px;
+  gap: 15px;
+  padding-right: 1rem;
 }
