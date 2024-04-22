@@ -13,7 +13,7 @@ export class ProductListComponent {
   @Output() leaveEvent = new EventEmitter();
 
   products: IProduct[] = [];
-  displayedColumns: string[] = ['Id', 'Name', 'Price', 'IsActive', 'Actions'];
+  displayedColumns: string[] = ['Name', 'Price', 'IsActive', 'Actions'];
   @Output() createProduct: EventEmitter<number> = new EventEmitter; // emite el evento crear o editar product
   hasAuthenticated: boolean = false;
 

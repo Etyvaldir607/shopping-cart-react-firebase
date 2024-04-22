@@ -2,36 +2,29 @@
   <mat-card-header>
     <mat-card-title>
       <div class="md-toolbar-tools">
-        <h1>Pizza</h1>
+        <h1>{{title}}</h1>
       </div>
     </mat-card-title>
   </mat-card-header>
   <mat-card-content>
     <div class="container">
-      <mat-card>
-          <div class="grid pt-4">
-            <div class="col-12 md:col-6 lg:col-3" [style]="{'padding': '3vh'}">
-              <mat-form-field appearance="fill" class="form-element">
-                <mat-label>Name</mat-label>
-                <input id="name" matInput placeholder="Name" [(ngModel)]="name">
-              </mat-form-field>
-            </div>
-            <div class="col-12 md:col-6 lg:col-3" [style]="{'padding': '3vh'}">
-              <mat-form-field appearance="fill" floatLabel="always" class="form-element">
-                <mat-label>Price</mat-label>
-                <input id="price" matInput type="number" class="example-right-align" placeholder="0" [(ngModel)]="price">
-                <span matTextPrefix>$&nbsp;</span>
-              </mat-form-field>
-            </div>
-            <div class="col-12 md:col-6 lg:col-3" [style]="{'padding': '3vh'}">
-              <div class="form-element">
-                <button mat-raised-button color="primary" type="submit" class="button" (click)="save()" >Guardar</button>
-              </div>
-              <div class="form-element">
-                <button mat-raised-button color="secondary" type="submit" class="button" (click)="cancel()">Cancelar</button>
-              </div>
-            </div>
-          </div>
+      <mat-card class="form">
+        <mat-form-field appearance="fill" class="form-element">
+          <mat-label>Name</mat-label>
+          <input id="name" matInput placeholder="Name" [(ngModel)]="name">
+        </mat-form-field>
+        <mat-form-field appearance="fill" floatLabel="always" class="form-element">
+          <mat-label>Price</mat-label>
+          <input id="price" matInput class="example-right-align" (keydown)="getValue($event)" placeholder="0" [(ngModel)]="price">
+          <span matTextPrefix>$&nbsp;</span>
+        </mat-form-field>
+
+        <div class="form-element">
+          <button mat-fab extended color="primary" class="button" (click)="save()" >Save</button>
+        </div>
+        <div class="form-element">
+          <button mat-fab extended color="default" class="button" (click)="cancel()">Cancel</button>
+        </div>
       </mat-card>
     </div>
   </mat-card-content>

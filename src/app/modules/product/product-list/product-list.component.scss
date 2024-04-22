@@ -2,6 +2,11 @@
   font-size: inherit;
   font-weight: inherit;
   margin: inherit;
+  padding: 1rem 0;
+}
+
+.md-button-tools {
+  padding: 1rem 0;
 }
 
 .mat-mdc-table {
@@ -15,5 +20,6 @@
 }
 
 button {
-  margin: 16px 8px;
+  border-radius: 15px;
 }
+

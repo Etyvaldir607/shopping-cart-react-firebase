@@ -1,3 +1,10 @@
+.md-toolbar-tools h1 {
+  font-size: inherit;
+  font-weight: inherit;
+  margin: inherit;
+  padding: 1rem 0;
+}
+
 .fill-remaining-space {
   /* This fills the remaining space, by using flexbox.
      Every toolbar row uses a flexbox row layout. */
@@ -14,6 +21,7 @@
   min-width: 150px;
   max-width: 500px;
   width: 100%;
+  padding: 20px 20px 0 20px;
 }
 
 .form-element {
@@ -23,4 +31,5 @@
 
 .button {
   width: 100%;
+  border-radius: 15px;
 }
